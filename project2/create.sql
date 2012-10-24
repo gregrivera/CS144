@@ -30,7 +30,7 @@ CREATE TABLE Users
 CREATE TABLE Location
 (LocationID INT,
  CountryID  INT,
- Location   VARCHAR(80)
+ Location   VARCHAR(80),
  
  PRIMARY KEY(LocationID)
  );
@@ -48,7 +48,7 @@ CREATE TABLE Country
 -- Create the Category Table
 CREATE TABLE Category
 (CategoryID INT,
- Category   VARCHAR(80)
+ Category   VARCHAR(80),
  
  PRIMARY KEY(CategoryID)
  );
