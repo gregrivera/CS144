@@ -14,7 +14,7 @@ WHERE Location = 'New York';
 
 --Find the number of auctions belonging to exactly four categories
 SELECT COUNT(ItemID)
-FROM Items, Categories
+FROM Items, Users
 GROUP BY CategoryID
 HAVING COUNT(*) = 4;
 

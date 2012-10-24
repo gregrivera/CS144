@@ -4,28 +4,28 @@
 -- Bulk load insert to populate the Items Table
 LOAD DATA
 LOCAL INFILE
-'items.dat'
+'nodup_items.dat'
 INTO TABLE Items
 FIELDS TERMINATED BY '|*|' OPTIONALLY ENCLOSED BY '"';
 
 -- Bulk load insert to populate the Users Table
 LOAD DATA
 LOCAL INFILE
-'users.dat'
+'nodup_users.dat'
 INTO TABLE Users
 FIELDS TERMINATED BY '|*|' OPTIONALLY ENCLOSED BY '"';
 
 -- Bulk load insert to populate the Item_Category Table
 LOAD DATA
 LOCAL INFILE
-'item_category.dat'
+'nodup_item_category.dat'
 INTO TABLE Item_Category
 FIELDS TERMINATED BY '|*|' OPTIONALLY ENCLOSED BY '"';
 
 -- Bulk load insert to populate the Bids Table
 LOAD DATA
 LOCAL INFILE
-'bids.dat'
+'nodup_bids.dat'
 INTO TABLE Bids
 FIELDS TERMINATED BY '|*|' OPTIONALLY ENCLOSED BY '"';
 
