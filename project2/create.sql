@@ -1,87 +1,49 @@
--- Parth and Greg Proj 2 create.sql
+-- Parth and Greg 
+-- Proj 2 create.sql
 
 
--- Create the Items Table
-CREATE TABLE Items
-(ItemID    INT,
- Name      VARCHAR(80),
- Buy_Price INT,
- First_Bid INT,
- Started   TIMESTAMP,
- Ends      TIMESTAMP,
+-- Items Table
+CREATE TABLE IF NOT EXISTS Items
+(ItemID      INT(11) NOT NULL,
+ UserID	     VARCHAR(100) NOT NULL,
+ Name        VARCHAR(100) NOT NULL,
+ Buy_Price   DECIMAL(8,2) NOT NULL,
+ First_Bid   DECIMAL(8,2) NOT NULL,
+ Started     TIMESTAMP NOT NULL,
+ Ends        TIMESTAMP NOT NULL,
+ Description VARCHAR(4000) NOT NULL,
  
  PRIMARY KEY(ItemID)
  );
 
-
--- Create the Users Table
-CREATE TABLE Users
-(UserID     VARCHAR(80),
- Rating     INT,
- LocationID INT,
- CountryID  INT,
- Location   VARCHAR(80),
+-- Users Table
+CREATE TABLE IF NOT EXISTS Users
+(UserID     VARCHAR(100) NOT NULL,
+ Rating     INT(11) NOT NULL,
+ Location 	VARCHAR(100) NOT NULL,
+ Country  	VARCHAR(100) NOT NULL,
  
  PRIMARY KEY(UserID)
  );
  
- 
--- Create the Location Table
-CREATE TABLE Location
-(LocationID INT,
- CountryID  INT,
- Location   VARCHAR(80),
- 
- PRIMARY KEY(LocationID)
- );
- 
- 
--- Create the Country Table
-CREATE TABLE Country
-(CountryID INT,
- Country   VARCHAR(80),
- 
- PRIMARY KEY(CountryID)
- );
- 
- 
--- Create the Category Table
-CREATE TABLE Category
-(CategoryID INT,
- Category   VARCHAR(80),
- 
- PRIMARY KEY(CategoryID)
- );
- 
- 
 -- Create the Item_Category Table
-CREATE TABLE Item_Category
-(ItemID     INT,
- CategoryID INT,
+CREATE TABLE IF NOT EXISTS Item_Category
+(ItemID   INT(11) NOT NULL,
+ Category VARCHAR(100) NOT NULL,
  
  PRIMARY KEY(ItemID)
  );
  
-
 -- Create the Bids Table
-CREATE TABLE Bids
-(BidID  INT,
- UserID VARCHAR(80),
- ItemID INT,
- Amount INT,
+CREATE TABLE IF NOT EXISTS Bids
+(BidID  INT(11) NOT NULL AUTO_INCREMENT,
+ UserID VARCHAR(100) NOT NULL,
+ ItemID INT(11) NOT NULL,
+ Time timestamp NOT NULL,
+ Amount DECIMAL(8,2) NOT NULL,
  
  PRIMARY KEY(BidID)
  );
- 
- 
--- Create the Item_Seller table
-CREATE TABLE Item_Seller
-(ItemID INT,
- UserID VARCHAR(80),
- 
- PRIMARY KEY(ItemID)
- );
- 
  
 -- End
 
