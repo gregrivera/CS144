@@ -25,4 +25,4 @@ mysql CS144 < load.sql
 
 # Remove all temporary files
 rm *.dat 
-rm load.sql
+
