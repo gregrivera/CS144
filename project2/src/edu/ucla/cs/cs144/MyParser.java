@@ -374,10 +374,10 @@ class MyParser {
         }
         
         try {
-			item_data = new BufferedWriter(new FileWriter("items.dat"));
-			user_data = new BufferedWriter(new FileWriter("users.dat"));
-			item_category_data = new BufferedWriter(new FileWriter("item_category.dat"));
-			bids_data = new BufferedWriter(new FileWriter("bids.dat"));
+			item_data = new BufferedWriter(new FileWriter("items.dat",true));
+			user_data = new BufferedWriter(new FileWriter("users.dat",true));
+			item_category_data = new BufferedWriter(new FileWriter("item_category.dat",true));
+			bids_data = new BufferedWriter(new FileWriter("bids.dat",true));
 			
 			
 	        /* Process all files listed on command line. */
