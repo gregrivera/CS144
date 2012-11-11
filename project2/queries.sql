@@ -7,21 +7,21 @@ FROM Users;
 
 
 --Find the number of sellers from New York 80
-SELECT COUNT(*)
+SELECT COUNT(DISTINCT Users.UserID)
 FROM Users
 INNER JOIN Items
 ON Users.UserID = Items.UserID
-WHERE Location = 'New York';
+WHERE BINARY Location = 'New York';
 
 
 --Find the number of auctions belonging to exactly four categories 8365
 
 SELECT COUNT(*)
-FROM Items
-INNER JOIN Item_Category
-ON Items.ItemID=Item_Category.ItemID
-GROUP BY Category
-HAVING COUNT(Category) = 4;
+FROM
+(SELECT COUNT(*) as c FROM Item_Category 
+	GROUP BY ItemID 
+	HAVING c = 4)
+as b;
 
 
 
@@ -36,14 +36,16 @@ AND Amount =
 
 
 --Find number of sellers with rating higher than 1000 : 3130
-SELECT COUNT(UserID)
+SELECT COUNT(DISTINCT Users.UserID)
 FROM Users
-WHERE Rating > 1000;
+INNER JOIN Items
+ON Users.UserID = Items.UserID
+WHERE BINARY Rating > 1000;
 
 
 
 --Find number of users who are both sellers and bidders 6717
-SELECT COUNT(*)
+SELECT COUNT(distinct Items.UserID)
 FROM Items
 INNER JOIN Bids
 ON Items.UserID = Bids.UserID;
@@ -51,7 +53,7 @@ ON Items.UserID = Bids.UserID;
 
 
 --Number of categories that include at least one item with a bid of > $100: 150
-SELECT COUNT(*)
+SELECT COUNT(distinct Category)
 FROM Item_Category
 INNER JOIN Bids
 ON Item_Category.ItemID = Bids.ItemID

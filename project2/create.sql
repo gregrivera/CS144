@@ -29,9 +29,8 @@ CREATE TABLE IF NOT EXISTS Users
 -- Create the Item_Category Table
 CREATE TABLE IF NOT EXISTS Item_Category
 (ItemID   INT(11) NOT NULL,
- Category VARCHAR(100) NOT NULL,
+ Category VARCHAR(100) NOT NULL
  
- PRIMARY KEY(ItemID)
  );
  
 -- Create the Bids Table

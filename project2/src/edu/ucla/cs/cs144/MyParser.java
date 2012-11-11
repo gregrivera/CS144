@@ -295,12 +295,26 @@ class MyParser {
     	{
     		Element user = getElementByTagNameNR(bids[i], "Bidder");
     		String userID = user.getAttribute("UserID");
+		String rating = user.getAttribute("Rating");
     		
     		String bid_time = getElementText(getElementByTagNameNR(bids[i], "Time"));
     		String time = "" + timestamp(bid_time);
     		
     		String amount = strip(getElementText(getElementByTagNameNR(bids[i], "Amount")));
     		
+		String location = getElementText(getElementByTagNameNR(user, "Location"));
+    		String country = getElementText(getElementByTagNameNR(user, "Country"));
+    	
+	    	if(location == null)
+    			location = "";
+    	
+	    	if(country == null)
+    			country = "";
+    	
+    	// Write out row
+    	load(user_data, userID, rating, location, country);
+		
+		
     		// Write out row
     		load(bids_data, "" + bidID++, userID, itemID, time, amount);
     	}
