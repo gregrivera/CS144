@@ -1,6 +1,44 @@
-<html>
+<!DOCTYPE html>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
 
-<body>
+<html>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<script type="text/javascript">
+	var geocoder;
+	var map;
+	
+	function initializeMap() {
+
+		var latlng = new google.maps.LatLng(-34.397, 150.644);
+		var myOptions = {
+				zoom: 8,
+				center: latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+				}
+		map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+		codeAddress();
+	}
+
+	function codeAddress() {
+		geocoder = new google.maps.Geocoder();		
+		var address = "<%= (String)request.getAttribute("loc") %>";
+		geocoder.geocode( { 'address': address}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			initializeMap();
+			map.setCenter(results[0].geometry.location);
+			var marker = new google.maps.Marker({
+				map: map,
+				position: results[0].geometry.location
+			});
+		} else { alert("Geocode was not successful for the following reason: " + status);
+}
+		});
+	}
+		  
+ 
+       </script>
+<body onload="codeAddress()">
 <form name="itemsearch" action="/eBay/item" method="get">
 ID Query: <input type="text" name="id"><br>
 <input type="submit" value="Submit Query">
@@ -53,16 +91,19 @@ ID Query: <input type="text" name="id"><br>
 	<p>Ends:<%= (String)request.getAttribute("end") %> </p> <br>
 	<p>SellerID:<%= (String)request.getAttribute("sellid") %> </p> <br>
 	<p>Seller Rating:<%= (String)request.getAttribute("sellrate") %> </p> <br>
-	
 
+
+
+
+        
     
     
     
     
     
     
-    
-    
+<div id="map_canvas" style="width: 600px; height: 400px"></div>
+
     
 </body>
 </html>
