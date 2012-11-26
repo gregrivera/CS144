@@ -16,7 +16,7 @@ import java.net.URL;
 import java.net.URI;
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
+
 
 public class ProxyServlet extends HttpServlet implements Servlet {
        
@@ -45,7 +45,7 @@ public class ProxyServlet extends HttpServlet implements Servlet {
 		httpconn = (HttpURLConnection)servAddr.openConnection();
 		httpconn.setDoOutput(true); //from URLConnection
 		httpconn.setRequestMethod("GET");
-		httpconn.setReadTimeout(10000);
+		
 		
 		httpconn.connect();
 		
@@ -65,7 +65,7 @@ public class ProxyServlet extends HttpServlet implements Servlet {
 			currentLine = br.readLine();
 		}
 		
-		PrintWriter pw = response.getWriter();
+		
 		response.getWriter().println(result);
 		response.setContentType("text/xml");
 		

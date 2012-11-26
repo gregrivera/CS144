@@ -20,6 +20,7 @@
 		codeAddress();
 	}
 
+	//note: some of this code was taken from the google geocoder tutorial
 	function codeAddress() {
 		geocoder = new google.maps.Geocoder();		
 		var address = "<%= (String)request.getAttribute("loc") %>";
@@ -31,8 +32,7 @@
 				map: map,
 				position: results[0].geometry.location
 			});
-		} else { alert("Geocode was not successful for the following reason: " + status);
-}
+		} 
 		});
 	}
 		  

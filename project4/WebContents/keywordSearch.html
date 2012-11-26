@@ -1,9 +1,68 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+<script type="text/javascript">
+
+
+function getSuggestXML(query)
+{
+	//connect to the suggest service
+	var url  = "http://localhost:8080/eBay/suggest?q=" + escape(query); //per spec
+	var conn = new XMLHttpRequest();
+	conn.open("GET", url, false);
+	conn.send();
+
+	//grab the results from the service
+	xml = conn.responseXML;
+	var allSuggestions = xml.getElementsByTagName("suggestion");
+	var results = new Array();
+	//place data from <suggestion data="superman returns"/> to get superman returns
+	for(int i = 0; i != allSuggestions.length; i++)
+	{
+		results[i] = allSuggestions[i].getAttribute("data");
+	}
+	
+	//return the compiled list of suggestions
+	return results;
+}
+	
+
+function eventHandler(event)
+{
+	var reload=false;
+	var currentKey;
+	if(window.event) {currentKey = event.keyCode} //case internet explorer
+	else if(event.which) {currentKey = event.which;}//every other browser
+	switch(currentKey)
+	{
+		case 13: //enter
+			return true;
+			break;
+		case 38: //up
+			controller.moveUp();
+			break;
+		case 40: //down
+			controller.moveDown();
+			break;
+		default:
+			controller.createDropDown();
+			break;
+	}
+	return false;
+}
+			
+
+</script>
+</head>
+
+
+
 <body>
 
 <form name="search" action="/eBay/search" method="get">
-Keyword Query: <input type="text" name="q"><br>
+Keyword Query: <input type="text" name="q" onkeyup="return eventHandler(event);"
+autocomplete="off"><br>
 <input type="hidden" name="numResultsToSkip" value="0">
 <input type="hidden" name="numResultsToReturn" value="10">
 <input type="submit" value="Submit Query">
