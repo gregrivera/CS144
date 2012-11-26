@@ -5,7 +5,7 @@
 <script type="text/javascript">
 
 
-function getSuggestXML(query)
+function getxml(query)
 {
 	//connect to the suggest service
 	var url  = "http://localhost:8080/eBay/suggest?q=" + escape(query); //per spec
@@ -53,6 +53,54 @@ function eventHandler(event)
 }
 			
 
+//define the autosuggest class
+var autosuggester = 
+{
+	//begin variables
+	divElement:document.createElement("div");
+	divElement.className:"suggester";
+	divElement.style.visibility:"hidden";
+	//append this to the keysearch
+	elementRoot:document.keysearch.appendChild(divElement);
+	selectionIndex:-1;
+	mostRecentValue:"";
+	textbox:document.keysearch.q;
+	
+	//begin functions
+	show: function () {this.divElement.style.visibility = "hidden";}
+	hide: function () {this.divElement.style.visibility = "visibile";}
+	setSelectionIndex: function (i) {
+		//the input variable i is the place to set the selection index
+		//verify that input variable i is less than node length, and that
+		//the highlighted index is within proper bounds
+		if(i<0) return; //should not happen
+		if(i < this.elementRoot.childNodes.length)
+		{
+			if(this.selectionIndex>=0 && this.selectionIndex <
+			this.elementRoot.childNodes.length)
+			{
+				//if index valid then it is no longer most recent,unset class
+				this.elementRoot.childNodes[this.selectionIndex].className="";
+			}
+			this.selectionIndex = i;		
+			//note: the innerHTML is the text value of a node/element
+			//as stated on http://www.w3schools.com/htmldom/dom_methods.asp
+			document.keysearch.q.value=
+			this.elementRoot.childNodes[this.selectionIndex].innerHTML;
+			this.elementRoot.childNodes[this.selectionIndex].className = "active";
+		}//end if
+		}//end setSelectionIndex function
+	
+	
+	moveSelectionIndex: function (dir) {
+		this.selectionIndex = this.selectionIndex + dir;
+		 
+		
+}
+
+
+
+
 </script>
 </head>
 
@@ -61,7 +109,7 @@ function eventHandler(event)
 <body>
 
 <form name="search" action="/eBay/search" method="get">
-Keyword Query: <input type="text" name="q" onkeyup="return eventHandler(event);"
+Keyword Query: <input name="keysearch" type="text" name="q" onkeyup="return eventHandler(event);"
 autocomplete="off"><br>
 <input type="hidden" name="numResultsToSkip" value="0">
 <input type="hidden" name="numResultsToReturn" value="10">
