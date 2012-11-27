@@ -18,7 +18,7 @@ function getxml(query)
 	var allSuggestions = xml.getElementsByTagName("suggestion");
 	var results = new Array();
 	//place data from <suggestion data="superman returns"/> to get superman returns
-	for(int i = 0; i != allSuggestions.length; i++)
+	for(i = 0; i != allSuggestions.length; i++)
 	{
 		results[i] = allSuggestions[i].getAttribute("data");
 	}
@@ -26,49 +26,38 @@ function getxml(query)
 	//return the compiled list of suggestions
 	return results;
 }
-	
-
-function eventHandler(event)
-{
-	var reload=false;
-	var currentKey;
-	if(window.event) {currentKey = event.keyCode} //case internet explorer
-	else if(event.which) {currentKey = event.which;}//every other browser
-	switch(currentKey)
-	{
-		case 13: //enter
-			return true;
-			break;
-		case 38: //up
-			controller.moveUp();
-			break;
-		case 40: //down
-			controller.moveDown();
-			break;
-		default:
-			controller.createDropDown();
-			break;
-	}
-	return false;
-}
 			
+function start()
+{
 
 //define the autosuggest class
 var autosuggester = 
 {
 	//begin variables
-	divElement:document.createElement("div");
-	divElement.className:"suggester";
-	divElement.style.visibility:"hidden";
-	//append this to the keysearch
-	elementRoot:document.keysearch.appendChild(divElement);
-	selectionIndex:-1;
-	mostRecentValue:"";
-	textbox:document.keysearch.q;
+	selectionIndex:-1,
+	mostRecentValue:"",
+	textbox:document.keysearch.q,
+	divElement: document.createElement("div"),
+	flag:0,
 	
 	//begin functions
-	show: function () {this.divElement.style.visibility = "hidden";}
-	hide: function () {this.divElement.style.visibility = "visibile";}
+	start: function () {
+			    if(this.flag == 0)
+			    {
+			    	this.divElement.className = "suggestions";
+				this.divElement.style.visibility = "hidden";
+				//append this to the keysearch
+			        this.elementRoot=document.keysearch.appendChild(this.divElement);
+			        //this.textbox = document.keysearch.q;
+				this.flag++;
+			    }//endif
+			   },
+	
+	show:  function () {this.divElement.style.visibility = "hidden";},
+	hide:  function () {this.divElement.style.visibility = "visibile";},
+	setActive: function (node)  {node.className="active";},
+	setInactive: function (node){node.className="";},
+	
 	setSelectionIndex: function (i) {
 		//the input variable i is the place to set the selection index
 		//verify that input variable i is less than node length, and that
@@ -89,35 +78,159 @@ var autosuggester =
 			this.elementRoot.childNodes[this.selectionIndex].innerHTML;
 			this.elementRoot.childNodes[this.selectionIndex].className = "active";
 		}//end if
-		}//end setSelectionIndex function
+		},//end setSelectionIndex function
 	
 	
-	moveSelectionIndex: function (dir) {
-		this.selectionIndex = this.selectionIndex + dir;
-		 
+	moveSelectionIndexUp: function () {
+		switch(this.highlightedIndex)
+		{
+			case -1:
+				this.selectionIndex = this.elementRoot.childNodes.length - 1;
+				this.elementRoot.childNodes[this.selectionIndex].className=
+				"active";
+				document.keysearch.q.value=
+				this.elementRoot.childNodes[this.selectionIndex].innerHTML;
+				break;
+			case 0:
+				this.elementRoot.childNodes[this.selectionIndex].className = "";
+                                document.keysearch.q.value = this.mostRecentValue;
+				//set selectionIndex back to -1
+				this.selectionIndex = -1;
+				break;
+			default:
+				this.elementRoot.childNodes[this.selectionIndex].className = "";
+				this.selectionIndex--; //move up
+				this.elementRoot.childNodes[this.selectionIndex].className=
+				"active";
+				document.keysearch.q.value = 
+				this.elementRoot.childNodes[this.selectionIndex].innerHTML;
+				break;
+		}//end switch
+		},//end moveSlectionIndexUP function
 		
+	moveSelectionIndexDown: function () {
+		switch(this.highlightedIndex)
+		{
+			case this.elementRoot.childNodes.length-1:
+				this.elementRoot.childNodes[this.selectionIndex].className="";
+				this.selectionIndex = -1;
+				document.keysearch.q.value= this.mostRecentValue;
+				break;
+			default:
+				if(this.selectionIndex != -1)
+				{
+				this.elementRoot.childNodes[this.selectionIndex].className="";
+				}
+				this.selectionIndex++;
+				this.elementRoot.childNodes[this.selectionIndex].className=
+				"active";
+				document.keysearch.q.value=
+				this.elementRoot.childNodes[this.selectionIndex].innerHTML;
+		}//end switch
+		},//end moveSelectionIndexDownFunction
+		
+	generateList: function ()
+		{
+			if(this.mostRecentValue != document.keysearch.q.value)
+			{
+				this.hide();
+				this.selectionIndex = -1;
+				this.divElement.style.width = this.textbox.offsetWidth;
+				
+				//remove old children
+				while (this.elementRoot.hasChildNodes()) 
+				{
+			    		this.elementRoot.removeChild(node.lastChild);
+				}
+				
+				var results = getxml(document.keysearch.q.value);
+				var index;
+				for(index = 0; index != results.length; index++)
+				{
+					var newDivElement = document.createElement("div");
+					newDivElement.innerHTML = results[i];
+					newDivElement.className="";
+					newDivElement.onclick = function(){submitForm();}
+					newDivElement.onmouseover =
+					Function("setSelectionIndex('"+index+"');");
+					this.elementRoot.appendChild(newDivElement);
+				}
+				this.show();
+				this.mostRecentValue = document.keysearch.q.value;
+			}//endif
+		}//end function generatelist
+	
+		
+}//end autosuggester
+
+return autosuggester;
+}//end functin start
+
+
+function eventHandler(event)
+{
+	var currentKey;
+	if(window.event) {currentKey = event.keyCode} //case internet explorer
+	else if(event.which) {currentKey = event.which;}//every other browser
+	autosuggest = start();
+	autosuggest.start();
+	switch(currentKey)
+	{
+		case 13: //enter
+			return true;
+			break;
+		case 38: //up
+			autosuggest.moveSelectionIndexUp();
+			break;
+		case 40: //down
+			autosuggest.moveSelectionIndexDown();
+			break;
+		default:
+			autosuggest.generateList();
+			break;
+	}
+	return false;
 }
 
-
-
+function submitForm(){document.forms["keysearch"].submit();}
 
 </script>
 </head>
 
 
 
-<body>
+<body onLoad="start()">
 
-<form name="search" action="/eBay/search" method="get">
-Keyword Query: <input name="keysearch" type="text" name="q" onkeyup="return eventHandler(event);"
-autocomplete="off"><br>
-<input type="hidden" name="numResultsToSkip" value="0">
-<input type="hidden" name="numResultsToReturn" value="10">
-<input type="submit" value="Submit Query">
+<form action="/eBay/search" method="GET" id="keysearch" name="keysearch">
+ Search:  <input name="q" type="text" onkeyup="return eventHandler(event);" autocomplete="off""/>
+<div class="suggestions"></div>
+ <input name="numResultsToSkip" type="hidden" value="0" />
+ <input name="numResultsToReturn" type="hidden" value="10" />
+ <input name="search" type="submit" />
 </form>
 
 
 
+<style>
+
+
+div.suggestions {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid black;
+    position: absolute;
+}
+
+div.suggestions div {
+    cursor: default;
+    padding: 0px 3px;
+}
+
+div.suggestions div.active {
+    background-color: #3366cc;
+    color: white;
+}
+</style>
 
 
 
